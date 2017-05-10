@@ -55,6 +55,8 @@
           p.age = parseInt(calculateAge(dob));
           p.height = getQuantityValueAndUnit(height[0]);
 
+          p.username = smart.tokenResponse.username;
+
           if (typeof systolicbp != 'undefined')  {
             p.systolicbp = systolicbp;
           }
@@ -90,6 +92,7 @@
       diastolicbp: {value: ''},
       ldl: {value: ''},
       hdl: {value: ''},
+      username: {value: ''},
     };
   }
 
@@ -155,6 +158,7 @@
     $('#diastolicbp').html(p.diastolicbp);
     $('#ldl').html(p.ldl);
     $('#hdl').html(p.hdl);
+    $('#username').html(p.username);
   };
 
 })(window);
