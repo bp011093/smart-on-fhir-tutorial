@@ -32,6 +32,7 @@
             p.lname = patient.name[0].family.join(' ');
           }
 
+          p.username = smart.tokenResponse.username;
           ret.resolve(p);
         });
 
