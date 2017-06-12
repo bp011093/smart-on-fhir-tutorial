@@ -9,6 +9,20 @@
 
     function onReady(smart)  {
       if (smart.hasOwnProperty('user')) {
+        var userURI = smart.userid;
+        var userURISections = userURI.split("/");
+
+        $.when(smart.api.read({type: userURISections[userURISections.length-2], id: userURISections[userURISections.length-1]}))
+          .done(function(userResult) {
+            var _user = {name: ""};
+            if (userResult.data.resourceType === "Patient") {
+              var patientName = userResult.data && userResult.data.name && userResult.data.name[0];
+              _user.name = patientName.given.join(" ") + " " + patientName.family.join(" ").trim();
+            }
+            _user.id = userResult.data.id;
+          }
+        );
+
         var user = smart.user;
         var fhir_user = user.read();
 
