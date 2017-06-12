@@ -9,31 +9,23 @@
 
     function onReady(smart)  {
       if (smart.hasOwnProperty('user')) {
-        var userURI = smart.userId;
-        var userURISections = userURI.split("/");
+        var fhirUser = smart.user;
+        var user = fhirUser.read();
 
-        $.when(smart.api.read({type: userURISections[userURISections.length-2], id: userURISections[userURISections.length-1]}))
-          .done(function(userResult) {
-            var _user = {name: ""};
-            if (userResult.data.resourceType === "Patient") {
-              var patientName = userResult.data && userResult.data.name && userResult.data.name[0];
-              _user.name = patientName.given.join(" ") + " " + patientName.family.join(" ").trim();
-            }
-            _user.id = userResult.data.id;
-          }
-        );
-
-        var user = smart.user;
-        var fhir_user = user.read();
-
-        $.when(fhir_user).fail(function() {
+        $.when(user).fail(function() {
           var tr = smart.tokenResponse;
 
+          // todo: update page
         });
 
-        $.when(fhir_user).done(function(fhir_user) {
-          var username = fhir_user.username;
-          var userid = fhir_user.userid;
+        $.when(user).done(function(userResult) {
+          var person = {name: ""};
+          if (userResult.data.resourceType === "Patient") {
+            var patientName = userResult.data && userResult.data.name && userResult.data.name[0];
+            person.name = patientName.given.join(" ") + " " + patientName.family.join(" ").trim();
+          }
+          person.id = userResult.data.id;
+          // todo: update page with user information
         });
       };
 
