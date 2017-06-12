@@ -9,7 +9,7 @@
 
     function onReady(smart)  {
       if (smart.hasOwnProperty('user')) {
-        var userURI = smart.userid;
+        var userURI = smart.userId;
         var userURISections = userURI.split("/");
 
         $.when(smart.api.read({type: userURISections[userURISections.length-2], id: userURISections[userURISections.length-1]}))
