@@ -17414,7 +17414,7 @@ function FhirClient(p) {
         var userId = client.userId;
         var userIdSections = userId.split("/");
         resource = userIdSections[userIdSections.length-2];
-        uid = userIdSections[userIdSections.lenght-1];
+        uid = userIdSections[userIdSections.length-1];
         return client.get({resource: resource, id: uid});
       }
     };
