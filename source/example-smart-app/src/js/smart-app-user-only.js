@@ -8,7 +8,7 @@
     }
 
     function onReady(smart)  {
-      if (smart.hasOwnProperty('user')) {
+      if (smart.hasOwnProperty('patient')) {
         var patient = smart.patient;
         var pt = patient.read();
         var user = smart.user.read();
@@ -24,19 +24,14 @@
                     }
                   });
 
-        $.when(pt, obv).fail(function(patient, obv) {
+        $.when(pt, obv, user).fail(function() {
           var p = defaultPatient();
-
-          if (typeof patient.name[0] !== 'undefined') {
-            p.fname = patient.name[0].given.join(' ');
-            p.lname = patient.name[0].family.join(' ');
-          }
 
           p.username = smart.tokenResponse.username;
           ret.resolve(p);
         });
 
-        $.when(pt, obv).done(function(patient, obv) {
+        $.when(pt, obv, user).done(function(patient, obv, user) {
           var byCodes = smart.byCodes(obv, 'code');
           var gender = patient.gender;
           var dob = new Date(patient.birthDate);
