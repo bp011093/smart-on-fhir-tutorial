@@ -38,7 +38,12 @@
                     }
                   });
 
-        $.when(pt, obv).fail(onError);
+        $.when(pt, obv).fail(function() {
+          var p = defaultPatient();
+
+          p.username = smart.tokenResponse.username;
+          ret.resolve(p);
+        });
 
         $.when(pt, obv).done(function(patient, obv) {
           var byCodes = smart.byCodes(obv, 'code');
