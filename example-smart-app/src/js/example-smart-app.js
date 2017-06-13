@@ -20,11 +20,13 @@
 
         $.when(user).done(function(userResult) {
           var person = {name: ""};
-          if (userResult.data.resourceType === "Patient") {
-            var patientName = userResult.data && userResult.data.name && userResult.data.name[0];
-            person.name = patientName.given.join(" ") + " " + patientName.family.join(" ").trim();
+          if (userResult.resourceType && userResult.resourceType === "Practitioner") {
+            if (userResult.name && userResult.name.text) {
+              person.name = userResult.name.text.trim();
+            }
+            person.id = userResult.id;
           }
-          person.id = userResult.data.id;
+          
           // todo: update page with user information
         });
       };
