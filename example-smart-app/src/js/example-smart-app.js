@@ -8,6 +8,13 @@
     }
 
     function onReady(smart)  {
+
+      var results = {};
+
+      var serviceUrl = smart.server.serviceUrl;
+      results.tenant = serviceUrl.substr(serviceUrl.lastIndexOf('/') + 1);
+      results.username = smart.tokenResponse.username;
+
       if (smart.hasOwnProperty('user')) {
         var fhirUser = smart.user;
         var user = fhirUser.read();
@@ -22,12 +29,14 @@
           var person = {name: ""};
           if (userResult.resourceType && userResult.resourceType === "Practitioner") {
             if (userResult.name && userResult.name.text) {
+              person.fname = userResult.
               person.name = userResult.name.text.trim();
             }
             person.id = userResult.id;
           }
           
-          // todo: update page with user information
+          results.user = person;
+          ret.resolve(results);
         });
       };
 
@@ -97,7 +106,8 @@
           p.hdl = getQuantityValueAndUnit(hdl[0]);
           p.ldl = getQuantityValueAndUnit(ldl[0]);
 
-          ret.resolve(p);
+          results.patient = p;
+          ret.resolve(results);
         });
       } else {
         onError();
@@ -174,20 +184,36 @@
     }
   }
 
-  window.drawVisualization = function(p) {
+  window.drawVisualization = function(results) {
     $('#holder').show();
     $('#loading').hide();
-    $('#fname').html(p.fname);
-    $('#lname').html(p.lname);
-    $('#gender').html(p.gender);
-    $('#birthdate').html(p.birthdate);
-    $('#age').html(p.age);
-    $('#height').html(p.height);
-    $('#systolicbp').html(p.systolicbp);
-    $('#diastolicbp').html(p.diastolicbp);
-    $('#ldl').html(p.ldl);
-    $('#hdl').html(p.hdl);
-    $('#username').html(p.username);
+
+    if (results) {
+      $('#tenant').html(results.tenant);
+      $('#username').html(results.username);
+
+      if (results.user) {
+        var u = results.user;
+        
+        $('#name').html(u.name);
+        $('#userid').html(u.id);
+      }
+
+      if (results.patient) {
+        var p = results.patient;
+        $('#fname').html(p.fname);
+        $('#lname').html(p.lname);
+        $('#gender').html(p.gender);
+        $('#birthdate').html(p.birthdate);
+        $('#age').html(p.age);
+        $('#height').html(p.height);
+        $('#systolicbp').html(p.systolicbp);
+        $('#diastolicbp').html(p.diastolicbp);
+        $('#ldl').html(p.ldl);
+        $('#hdl').html(p.hdl);
+      }
+    }
   };
 
 })(window);
+

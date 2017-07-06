@@ -16,7 +16,38 @@
       <div class="bounce3"></div>
     </div>
     <div id='holder' >
-      <h2>Example-SMART-App</h2>
+      <div id='headerContainer'>
+        <div id='title'>
+          <h2>Example-SMART-App</h2>
+          <h3>Tenant : <span id="tenant"></span></h3>
+          <h3>URL : <span id="url"></span></h3>
+        </div>
+      </div>
+
+      <div class='borderLine'></div>
+      <h2>Session Information</h2>
+      <table>
+        <tr>
+          <th>ID Token</th>
+          <td id='token'></td>
+        </tr>
+      </table>
+
+      <h2>User Information</h2>
+      <table>
+        <tr>
+          <th>Username:</th>
+          <td id='username'></td>
+        </tr>
+        <tr>
+          <th>Name:</th>
+          <td id='name'></td>
+        </tr>
+        <tr>
+          <th>id:</th>
+          <td id='userid'></td>
+        </tr>
+      </table>
 
       <h2>Patient Resource</h2>
       <table>
@@ -65,13 +96,6 @@
           <td id='hdl'></td>
         </tr>
       </table>
-      <h2>User</h2>
-      <table>
-        <tr>
-          <th>Username:</th>
-          <td id='username'></td>
-        </tr>
-      </table>
     </div>
     <script src='./lib/es6-shim-0.35.1.min.js'></script>
     <script src='./src/js/example-smart-app.js'></script>
@@ -93,3 +117,4 @@
     </script>
   </body>
 </html>
+
