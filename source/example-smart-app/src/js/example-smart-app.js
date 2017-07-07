@@ -12,8 +12,12 @@
       var results = {};
 
       var serviceUrl = smart.server.serviceUrl;
-      results.tenant = serviceUrl.substr(serviceUrl.lastIndexOf('/') + 1);
+      results.tenant = smart.tokenResponse.tenant;
       results.username = smart.tokenResponse.username;
+      results.patientId = smart.tokenResponse.patientId;
+      results.encounterId = smart.tokenResponse.encounterId;
+      results.idToken = smart.tokenResponse.idToken;
+      results.url = document.url;
 
       if (smart.hasOwnProperty('user')) {
         var fhirUser = smart.user;
@@ -119,6 +123,21 @@
 
   };
 
+  function getSearchParameters() {
+    var prmstr = window.location.search.substr(1);
+    return prmstr != null && prmstr != "" ? transformToAssocArray(prmstr) : {};
+  }
+   
+  function transformToAssocArray( prmstr ) {
+    var params = {};
+    var prmarr = prmstr.split("&");
+    for ( var i = 0; i < prmarr.length; i++) {
+      var tmparr = prmarr[i].split("=");
+      params[tmparr[0]] = tmparr[1];
+   }
+    return params;
+  }
+
   function defaultPatient(){
     return {
       fname: {value: ''},
@@ -191,6 +210,11 @@
     if (results) {
       $('#tenant').html(results.tenant);
       $('#username').html(results.username);
+      $('#patientId').html(results.patientId);
+      $('#encounterId').html(results.encounterId);
+      $('#token').html(results.idToken);
+      $('#accessToken').html(results.accessToken);
+      $('#url').html(results.url);
 
       if (results.user) {
         var u = results.user;
