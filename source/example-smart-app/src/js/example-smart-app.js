@@ -78,7 +78,7 @@
           ret.resolve(p);
         });
 
-        $.when(pt, obv, user).done(function(patient, obv) {
+        $.when(pt, obv, user).done(function(patient, obv, userResult) {
           // Patient
           var byCodes = smart.byCodes(obv, 'code');
           var gender = patient.gender;
