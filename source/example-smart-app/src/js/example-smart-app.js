@@ -14,11 +14,14 @@
       var serviceUrl = smart.server.serviceUrl;
       results.tenant = smart.tokenResponse.tenant;
       results.username = smart.tokenResponse.username;
-      results.patientId = smart.tokenResponse.patientId;
-      results.encounterId = smart.tokenResponse.encounterId;
-      results.idToken = smart.tokenResponse.idToken;
-      results.url = document.url;
+      results.patientId = smart.tokenResponse.patient;
+      results.encounterId = smart.tokenResponse.encounter;
+      results.idToken = smart.tokenResponse.id_token;
+      results.accessToken = smart.tokenResponse.access_token;
+      results.params = getSearchParameters();
+      results.url = document.URL;
 
+/*
       if (smart.hasOwnProperty('user')) {
         var fhirUser = smart.user;
         var user = fhirUser.read();
@@ -43,8 +46,8 @@
           ret.resolve(results);
         });
       };
-
-      if (smart.hasOwnProperty('patient')) {
+*/
+      if (smart.hasOwnProperty('patient') && smart.hasOwnProperty('user')) {
         var patient = smart.patient;
         var pt = patient.read();
 
@@ -59,14 +62,24 @@
                     }
                   });
 
-        $.when(pt, obv).fail(function() {
-          var p = defaultPatient();
 
-          p.username = smart.tokenResponse.username;
+        var fhirUser = smart.user;
+        var user = fhirUser.read();
+
+        $.when(pt, obv, user).fail(function() {
+          var p = defaultPatient();
+          var u = {}
+
+          u.name = smart.tokenResponse.username;
+          u.id = smart.tokenResponse.user;
+
+          results.patient = p;
+          results.user = u;
           ret.resolve(p);
         });
 
-        $.when(pt, obv).done(function(patient, obv) {
+        $.when(pt, obv, user).done(function(patient, obv) {
+          // Patient
           var byCodes = smart.byCodes(obv, 'code');
           var gender = patient.gender;
           var dob = new Date(patient.birthDate);
@@ -111,6 +124,20 @@
           p.ldl = getQuantityValueAndUnit(ldl[0]);
 
           results.patient = p;
+
+          // User
+          var person = {name: ""};
+          if (userResult.resourceType && userResult.resourceType === "Practitioner") {
+            if (userResult.name && userResult.name.text) {
+              person.fname = userResult.
+              person.name = userResult.name.text.trim();
+            }
+            person.id = userResult.id;
+          }
+          
+          results.user = person;
+
+          // Send back results
           ret.resolve(results);
         });
       } else {
