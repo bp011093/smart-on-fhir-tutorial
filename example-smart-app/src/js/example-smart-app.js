@@ -18,35 +18,9 @@
       results.encounterId = smart.tokenResponse.encounter;
       results.idToken = smart.tokenResponse.id_token;
       results.accessToken = smart.tokenResponse.access_token;
-      results.params = getSearchParameters();
+      results.params = JSON.stringify(getSearchParameters());
       results.url = document.URL;
 
-/*
-      if (smart.hasOwnProperty('user')) {
-        var fhirUser = smart.user;
-        var user = fhirUser.read();
-
-        $.when(user).fail(function() {
-          var tr = smart.tokenResponse;
-
-          // todo: update page
-        });
-
-        $.when(user).done(function(userResult) {
-          var person = {name: ""};
-          if (userResult.resourceType && userResult.resourceType === "Practitioner") {
-            if (userResult.name && userResult.name.text) {
-              person.fname = userResult.
-              person.name = userResult.name.text.trim();
-            }
-            person.id = userResult.id;
-          }
-          
-          results.user = person;
-          ret.resolve(results);
-        });
-      };
-*/
       if (smart.hasOwnProperty('patient') && smart.hasOwnProperty('user')) {
         var patient = smart.patient;
         var pt = patient.read();
@@ -129,8 +103,10 @@
           var person = {name: ""};
           if (userResult.resourceType && userResult.resourceType === "Practitioner") {
             if (userResult.name && userResult.name.text) {
-              person.fname = userResult.
               person.name = userResult.name.text.trim();
+              person.fname = userResult.name.given[0];
+              person.lname = userResult.name.family[0];
+              person.use = userResult.name.use;
             }
             person.id = userResult.id;
           }
@@ -242,12 +218,15 @@
       $('#token').html(results.idToken);
       $('#accessToken').html(results.accessToken);
       $('#url').html(results.url);
+      $('#params').html(results.params);
 
       if (results.user) {
         var u = results.user;
-        
-        $('#name').html(u.name);
         $('#userid').html(u.id);
+        $('#name').html(u.name);
+        $('#userFirstName').html(u.fname);
+        $('#userLastName').html(u.lname);
+        $('#use').html(u.use);
       }
 
       if (results.patient) {
