@@ -36,7 +36,6 @@
                     }
                   });
 
-
         var fhirUser = smart.user;
         var user = fhirUser.read();
 
@@ -49,7 +48,7 @@
 
           results.patient = p;
           results.user = u;
-          ret.resolve(p);
+          ret.resolve(results);
         });
 
         $.when(pt, obv, user).done(function(patient, obv, userResult) {
