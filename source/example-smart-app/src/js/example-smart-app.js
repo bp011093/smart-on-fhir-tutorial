@@ -116,7 +116,15 @@
           ret.resolve(results);
         });
       } else {
-        onError();
+        var p = defaultPatient();
+        var u = {}
+
+        u.name = smart.tokenResponse.username;
+        u.id = smart.tokenResponse.user;
+
+        results.patient = p;
+        results.user = u;
+        ret.resolve(results);
       }
     }
 
