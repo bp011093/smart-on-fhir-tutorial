@@ -7,12 +7,12 @@
       ret.reject();
     }
 
-    function showSMARTSession() {
+    function showSMARTSession(results) {
       var p = defaultPatient();
       var u = {}
 
-      u.name = smart.tokenResponse.username;
-      u.id = smart.tokenResponse.user;
+      u.name = results.username;
+      u.id = results.userId;
 
       results.patient = p;
       results.user = u;
@@ -26,6 +26,7 @@
       var serviceUrl = smart.server.serviceUrl;
       results.tenant = smart.tokenResponse.tenant;
       results.username = smart.tokenResponse.username;
+      results.userId = smart.tokenResponse.user;
       results.patientId = smart.tokenResponse.patient;
       results.encounterId = smart.tokenResponse.encounter;
       results.idToken = smart.tokenResponse.id_token;
@@ -52,7 +53,7 @@
         var user = fhirUser.read();
 
         $.when(pt, obv, user).fail(function() {
-          showSMARTSession();
+          showSMARTSession(results);
         });
 
         $.when(pt, obv, user).done(function(patient, obv, userResult) {
@@ -120,7 +121,7 @@
           ret.resolve(results);
         });
       } else {
-        showSMARTSession();
+        showSMARTSession(results);
       }
     }
 
